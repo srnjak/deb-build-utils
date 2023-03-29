@@ -6,12 +6,12 @@ This repository contains a set of Bash scripts that automate various tasks relat
 
 The following scripts are available:
 
-### version-manager.sh
+### version-updater.sh
 
-The `version-manager.sh` script updates the version number in a project's `project.properties` file. 
+The `version-updater.sh` script updates the version number in a project's `project.properties` file. 
 It provides three options to update the version number and prints the new version number to the console. 
 
-For more detailed information, see the [documentation file](doc/version-manager.md).
+For more detailed information, see the [documentation file](doc/version-updater.md).
 
 ### generate_control_file.sh
 
