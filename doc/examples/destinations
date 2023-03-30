@@ -1,0 +1,6 @@
+#bash/script1.sh:usr/share/my-package
+#bash/script2.sh:usr/share/my-package
+#bash/script3.sh:usr/share/another-package
+#bash/script4.sh:usr/bin
+
+bash/*.sh:usr/share/my-package

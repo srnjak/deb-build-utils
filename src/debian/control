@@ -1,0 +1,8 @@
+Package: deb-build-utils
+Version: 1.0.0
+Architecture: all
+Maintainer: Grega Krajnc <grega.dev@srnjak.com>
+Description: This package provides a set of utilities to simplify the process
+ of building Debian packages. Included scripts facilitate generating control
+ files, managing version numbers, and creating the required directory
+ structure.

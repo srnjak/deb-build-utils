@@ -1,0 +1,45 @@
+name: Release workflow
+
+env:
+  PACKAGE_NAME: deb-build-utils
+
+defaults:
+  run:
+    shell: bash -eo pipefail {0}
+
+on:
+  workflow_dispatch:
+
+jobs:
+  release-job:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Prepare
+        run: |
+          rm -rf target
+          
+          mkdir -p target/${{ env.PACKAGE_NAME }}/DEBIAN
+          cp src/debian/* target/${{ env.PACKAGE_NAME }}/DEBIAN/
+          
+          mkdir -p target/${{ env.PACKAGE_NAME }}/usr/share/${{ env.PACKAGE_NAME }}
+          cp src/bash/ target/${{ env.PACKAGE_NAME }}/usr/share/${{ env.PACKAGE_NAME }}/
+      - name: Package
+        run: |
+          dpkg-deb --build "target/${{ env.PACKAGE_NAME }}" "target/${{ env.PACKAGE_NAME }}.deb"
+      - name: Deploy
+        run: |
+          curl -u "${{ vars.REPOSITORY_USERNAME }}:${{ secrets.REPOSITORY_PASSWORD }}" \
+            -H "Content-Type: multipart/form-data" \
+            --data-binary "@target/${{ env.PACKAGE_NAME }}.deb" \
+            "${{ vars.REPOSITORY_URL }}"
+      - name: Upload release artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: Release
+          path: target/${{ env.PACKAGE_NAME }}.deb
+        env:
+          GITHUB_TOKEN: ${{ secrets.BOT_TOKEN }}
