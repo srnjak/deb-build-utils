@@ -26,7 +26,7 @@ jobs:
           cp src/debian/* target/${{ env.PACKAGE_NAME }}/DEBIAN/
           
           mkdir -p target/${{ env.PACKAGE_NAME }}/usr/share/${{ env.PACKAGE_NAME }}
-          cp src/bash/ target/${{ env.PACKAGE_NAME }}/usr/share/${{ env.PACKAGE_NAME }}/
+          cp src/bash/* target/${{ env.PACKAGE_NAME }}/usr/share/${{ env.PACKAGE_NAME }}/
       - name: Package
         run: |
           dpkg-deb --build "target/${{ env.PACKAGE_NAME }}" "target/${{ env.PACKAGE_NAME }}.deb"
