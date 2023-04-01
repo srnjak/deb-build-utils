@@ -34,7 +34,7 @@ jobs:
         run: |
           curl -u "${{ vars.REPOSITORY_USERNAME }}:${{ secrets.REPOSITORY_PASSWORD }}" \
             -H "Content-Type: multipart/form-data" \
-            --data-binary "@target/${{ env.PACKAGE_NAME }}.deb" \
+            --data-binary "@target/${{ env.PACKAGE_NAME }}.deb" -f \
             "${{ vars.REPOSITORY_URL }}"
       - name: Upload release artifact
         uses: actions/upload-artifact@v2
