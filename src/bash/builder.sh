@@ -1,12 +1,9 @@
 #!/bin/bash
 
-# Get the directory of the script
-SCRIPT_DIR=$(dirname "$0")
-
 # The project root
-ROOT_DIR="$(realpath "$SCRIPT_DIR/..")"
+ROOT_DIR="$(pwd)"
 
-echo "The project root directory is: $ROOT_DIR"
+echo "The current directory is: $ROOT_DIR"
 
 # The target directory
 TARGET_DIR="$ROOT_DIR/target"
