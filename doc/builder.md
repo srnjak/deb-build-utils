@@ -4,10 +4,10 @@
 
 ## Usage
 
-    ./builder.sh clean
-    ./builder.sh prepare
-    ./builder.sh package [-n <package_name>]
-    ./builder.sh deploy -u <username> -p <password> -r <repository_url> -n <package_name>
+    builder.sh clean [-d <project_root>]
+    builder.sh prepare -n <package_name> [-d <project_root>]
+    builder.sh package [-n <package_name>] [-d <project_root>]
+    builder.sh deploy -u <username> -p <password> -r <repository_url> -n <package_name> [-d <project_root>]
 
 ## Commands
 
@@ -22,6 +22,7 @@
 - `-p <password>`: The password for the repository.
 - `-r <repository_url>`: The URL of the repository to deploy to.
 - `-n <package_name>`: The name of the .deb package to create (without extension).
+- `-d <project_root>`: The path to the root directory of the project. If this path is not set, the current directory will be taken into consideration.
 
 ## Examples
 
