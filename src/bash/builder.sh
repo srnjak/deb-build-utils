@@ -1,24 +1,22 @@
 #!/bin/bash
 
-# The project root
-ROOT_DIR="$(pwd)"
+set -e  # Exit immediately if any command exits with a non-zero status
 
-echo "The current directory is: $ROOT_DIR"
-
-# The target directory
-TARGET_DIR="$ROOT_DIR/target"
+# Get the directory of the script
+SCRIPT_DIR=$(dirname "$(realpath "${BASH_SOURCE[0]}")")
 
 # Default values for deployment options
 DEPLOY_USER=""
 DEPLOY_PASSWORD=""
 DEPLOY_REPO=""
 PACKAGE_NAME=""
+PROJECT_ROOT=""
 
 # Function to print usage information
 function print_usage() {
   cat << EOF
 
-Usage: $0 <command> [-u <username>] [-p <password>] [-r <repository_url>] [-n <package_name>]
+Usage: $0 <command> [-u <username>] [-p <password>] [-r <repository_url>] [-n <package_name>] [-d <project_root>]
 
 Commands:
   clean      - Remove the target directory
@@ -32,6 +30,7 @@ Options:
   -r <repository_url>   - The URL of the repository to deploy to
   -n <package_name>     - The name of the .deb package to create
                           (without extension)
+  -d <project_root>     - The path to the project root directory
 EOF
 }
 
@@ -47,7 +46,7 @@ command=$1
 shift
 
 # Parse command-line options
-while getopts ":u:p:r:n:" opt; do
+while getopts ":u:p:r:n:d:" opt; do
   case ${opt} in
     u )
       DEPLOY_USER=${OPTARG}
@@ -60,6 +59,9 @@ while getopts ":u:p:r:n:" opt; do
       ;;
     n )
       PACKAGE_NAME=${OPTARG}
+      ;;
+    d )
+      PROJECT_ROOT=${OPTARG}
       ;;
     \? )
       echo "Invalid option: -$OPTARG" 1>&2
@@ -75,6 +77,16 @@ while getopts ":u:p:r:n:" opt; do
 done
 shift $((OPTIND -1))
 
+# Check if PROJECT_ROOT variable is set. If it isn't, set it to the current directory.
+if [[ -z "${PROJECT_ROOT}" ]]; then
+  PROJECT_ROOT=$(pwd)
+fi
+
+echo "The project root directory is: $PROJECT_ROOT"
+
+# The target directory
+TARGET_DIR="$PROJECT_ROOT/target"
+
 # Execute the appropriate command
 case "$command" in
   clean)
@@ -83,8 +95,9 @@ case "$command" in
     ;;
   prepare)
     echo "Preparing..."
-    $SCRIPT_DIR/generate_control_file.sh $ROOT_DIR
-    $SCRIPT_DIR/deb_structure.sh $ROOT_DIR
+    echo $SCRIPT_DIR
+    "$SCRIPT_DIR"/generate_control_file.sh "$PROJECT_ROOT"
+    "$SCRIPT_DIR"/deb_structure.sh "$PROJECT_ROOT"
     ;;
   package)
     echo "Packaging..."
@@ -116,7 +129,7 @@ case "$command" in
     fi
 
     echo "Deploying with username $DEPLOY_USER, and repository URL $DEPLOY_REPO..."
-    curl -u "$DEPLOY_USER:$DEPLOY_PASSWORD" -H "Content-Type: multipart/form-data" --data-binary "@$TARGET_DIR/$PACKAGE_NAME.deb" "$DEPLOY_REPO"
+    curl -u "$DEPLOY_USER:$DEPLOY_PASSWORD" -H "Content-Type: multipart/form-data" --data-binary "@$TARGET_DIR/$PACKAGE_NAME.deb" -f "$DEPLOY_REPO"
 
     ;;
   *)
