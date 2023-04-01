@@ -16,7 +16,11 @@ PROJECT_ROOT=""
 function print_usage() {
   cat << EOF
 
-Usage: $0 <command> [-u <username>] [-p <password>] [-r <repository_url>] [-n <package_name>] [-d <project_root>]
+Usage:
+    $0 clean [-d <project_root>]
+    $0 prepare -n <package_name> [-d <project_root>]
+    $0 package [-n <package_name>] [-d <project_root>]
+    $0 deploy -u <username> -p <password> -r <repository_url> -n <package_name> [-d <project_root>]
 
 Commands:
   clean      - Remove the target directory
@@ -30,7 +34,7 @@ Options:
   -r <repository_url>   - The URL of the repository to deploy to
   -n <package_name>     - The name of the .deb package to create
                           (without extension)
-  -d <project_root>     - The path to the project root directory
+  -d <project_root>     - The path to the root directory of the project. If this path is not set, the current directory will be taken into consideration.
 EOF
 }
 
@@ -95,9 +99,12 @@ case "$command" in
     ;;
   prepare)
     echo "Preparing..."
-    echo $SCRIPT_DIR
+
+    # Check package name option
+    check_input "$PACKAGE_NAME" "Package name"
+
     "$SCRIPT_DIR"/generate_control_file.sh "$PROJECT_ROOT"
-    "$SCRIPT_DIR"/deb_structure.sh "$PROJECT_ROOT"
+    "$SCRIPT_DIR"/deb_structure.sh -p "$PACKAGE_NAME" "$PROJECT_ROOT"
     ;;
   package)
     echo "Packaging..."
