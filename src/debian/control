@@ -1,5 +1,5 @@
 Package: deb-build-utils
-Version: 1.0.0
+Version: 1.0.1
 Architecture: all
 Maintainer: Grega Krajnc <grega.dev@srnjak.com>
 Description: This package provides a set of utilities to simplify the process
