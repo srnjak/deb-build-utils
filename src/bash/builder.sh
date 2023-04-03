@@ -10,6 +10,7 @@ DEPLOY_USER=""
 DEPLOY_PASSWORD=""
 DEPLOY_REPO=""
 PACKAGE_NAME=""
+OUTPUT_FILE=""
 PROJECT_ROOT=""
 
 # Function to print usage information
@@ -19,8 +20,8 @@ function print_usage() {
 Usage:
     $0 clean [-d <project_root>]
     $0 prepare -n <package_name> [-d <project_root>]
-    $0 package [-n <package_name>] [-d <project_root>]
-    $0 deploy -u <username> -p <password> -r <repository_url> -n <package_name> [-d <project_root>]
+    $0 package -n <package_name> [-d <project_root>] [-o <output_filename>]
+    $0 deploy -n <package_name> -u <username> -p <password> -r <repository_url> [-d <project_root>]
 
 Commands:
   clean      - Remove the target directory
@@ -32,8 +33,8 @@ Options:
   -u <username>         - The username for the repository
   -p <password>         - The password for the repository
   -r <repository_url>   - The URL of the repository to deploy to
-  -n <package_name>     - The name of the .deb package to create
-                          (without extension)
+  -n <package_name>     - The name of the package
+  -o <output_filename>  - The name of the .deb file to create
   -d <project_root>     - The path to the root directory of the project. If this path is not set, the current directory will be taken into consideration.
 EOF
 }
@@ -50,7 +51,7 @@ command=$1
 shift
 
 # Parse command-line options
-while getopts ":u:p:r:n:d:" opt; do
+while getopts ":u:p:r:n:o:d:" opt; do
   case ${opt} in
     u )
       DEPLOY_USER=${OPTARG}
@@ -63,6 +64,9 @@ while getopts ":u:p:r:n:d:" opt; do
       ;;
     n )
       PACKAGE_NAME=${OPTARG}
+      ;;
+    o )
+      OUTPUT_FILE=${OPTARG}
       ;;
     d )
       PROJECT_ROOT=${OPTARG}
@@ -110,10 +114,10 @@ case "$command" in
     echo "Packaging..."
 
     # Define the target path variable
-    if [[ -z "$PACKAGE_NAME" ]]; then
+    if [[ -z "$OUTPUT_FILE" ]]; then
       TARGET_PATH="$TARGET_DIR"
     else
-      TARGET_PATH="$TARGET_DIR/$PACKAGE_NAME.deb"
+      TARGET_PATH="$TARGET_DIR/$OUTPUT_FILE"
     fi
 
     dpkg-deb --build "$TARGET_DIR/$PACKAGE_NAME" "$TARGET_PATH"
