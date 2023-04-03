@@ -6,8 +6,8 @@
 
     builder.sh clean [-d <project_root>]
     builder.sh prepare -n <package_name> [-d <project_root>]
-    builder.sh package [-n <package_name>] [-d <project_root>]
-    builder.sh deploy -u <username> -p <password> -r <repository_url> -n <package_name> [-d <project_root>]
+    builder.sh package -n <package_name> [-d <project_root>] [-o <output_filename>]
+    builder.sh deploy -n <package_name> -u <username> -p <password> -r <repository_url> [-d <project_root>]
 
 ## Commands
 
@@ -21,7 +21,8 @@
 - `-u <username>`: The username for the repository.
 - `-p <password>`: The password for the repository.
 - `-r <repository_url>`: The URL of the repository to deploy to.
-- `-n <package_name>`: The name of the .deb package to create (without extension).
+- `-n <package_name>`: The name of the package
+- `-o <output_filename>`: The name of the .deb file to create
 - `-d <project_root>`: The path to the root directory of the project. If this path is not set, the current directory will be taken into consideration.
 
 ## Examples
@@ -32,7 +33,7 @@ Clean:
 
 Prepare:
 
-    ./builder.sh prepare
+    ./builder.sh prepare -n mypackage
 
 Package:
 
@@ -40,4 +41,4 @@ Package:
 
 Deploy:
 
-    ./builder.sh deploy -u myusername -p mypassword -r https://myrepo.com/debian -n mypackage
+    ./builder.sh deploy -n mypackage -u myusername -p mypassword -r https://myrepo.com/debian
