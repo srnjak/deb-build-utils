@@ -67,7 +67,7 @@ copy_files() {
     fi
 
     # Create the target directory if it doesn't exist
-    target_dir=$(dirname "$destination_root/$destination_dir")
+    target_dir="$destination_root/$destination_dir"
     mkdir -p "$target_dir/"
 
     # Copy the source file(s) to the destination
@@ -91,7 +91,7 @@ then
 fi
 
 mkdir -p "$root_dir/target/$package_name/DEBIAN"
-cp -r "$root_dir/target/DEBIAN" "$root_dir/target/$package_name"
+cp -r "$root_dir/target/DEBIAN/"* "$root_dir/target/$package_name/DEBIAN/"
 
 # Copying the files
 copy_files "$(realpath "$root_dir/src/debian/destinations")" "$package_name"
